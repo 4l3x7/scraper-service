@@ -270,7 +270,7 @@ data:
       - job_name: scraper-service
         metrics_path: /metrics
         static_configs:
-        - targets: ['scraper-service.default.svc.cluster.local:9095']
+        - targets: ['scraper-service.scraper-service.svc.cluster.local:9095']
 
   recording_rules.yml: |
     {}

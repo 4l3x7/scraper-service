@@ -4,10 +4,9 @@ metadata:
   name: grafana-ingress
 spec:
   rules:
-  - host: grafana.alex.local
-    http:
+  - http:
       paths:
-      - path: /
+      - path: /grafana
         pathType: Prefix
         backend:
           service:

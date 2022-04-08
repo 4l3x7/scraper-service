@@ -4,8 +4,7 @@ metadata:
   name: scraper-ingress
 spec:
   rules:
-  - host: alex.local
-    http:
+  - http:
       paths:
       - path: /
         pathType: Prefix
