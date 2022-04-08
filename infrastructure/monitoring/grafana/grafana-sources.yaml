@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+data:
+  sources.yaml: |-
+    {
+        "apiVersion": 1,
+        "datasources": [
+            {
+               "access":"proxy",
+                "editable": true,
+                "name": "Prometheus",
+                "orgId": 1,
+                "type": "prometheus",
+                "url": "prometheus-server.monitoring.svc.cluster.local",
+                "version": 1
+            }
+        ]
+    }
