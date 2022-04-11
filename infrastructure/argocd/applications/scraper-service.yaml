@@ -2,17 +2,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: staging
+  name: scraper-service
   labels:
-    env: staging
+    env: integration
   finalizers:
   - resources-finalizer.argocd.argoproj.io  
 spec:
   project: default
   source:
-    repoURL: git@bitbucket.org:pucksolutions/scheduling-engine.git
-    targetRevision: develop
-    path: kubernetes/integration-staging/staging-patches          
+    repoURL: git@github.com:4l3x7/scraper-service.git
+    targetRevision: main
+    path: infrastructure/app         
   destination:
     server: https://kubernetes.default.svc
   syncPolicy: {}

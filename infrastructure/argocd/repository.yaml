@@ -4,10 +4,9 @@ metadata:
   name: argocd-cm
 data:
   repositories: |
-    - name: scheduling-engine
+    - name: scraper-service
       sshPrivateKeySecret:
         key: sshPrivateKey
-        name: repo-644572769
+        name: repo-ssh-key
       type: git
-      url: git@bitbucket.org:pucksolutions/scheduling-engine.git
----
+      url: git@github.com:4l3x7/scraper-service.git

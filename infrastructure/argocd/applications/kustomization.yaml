@@ -4,23 +4,5 @@ namespace: argocd
 
 resources:
 - ingress.yaml
-- integration.yaml
-- staging.yaml
+- scraper-service.yaml
 - monitoring.yaml
-- zipkin.yaml
-- ingress-rule.yaml
-- cleaning-job.yaml
-
-patches:
-  - path: integration-branch-patch.yaml
-    target:
-      kind: Application
-      labelSelector: env=integration
-  - path: common-branch-patch.yaml
-    target:
-      kind: Application
-      labelSelector: env=common
-  - path: staging-branch-patch.yaml
-    target:
-      kind: Application
-      labelSelector: env=staging
