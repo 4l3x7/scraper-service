@@ -7,6 +7,6 @@ data:
     - name: scraper-service
       sshPrivateKeySecret:
         key: sshPrivateKey
-        name: repo-ssh-key
+        name: repo-644572769
       type: git
       url: git@github.com:4l3x7/scraper-service.git

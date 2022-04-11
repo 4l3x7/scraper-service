@@ -33,7 +33,7 @@ function success {
     echo "${correct} [OK]${end} # ${1}${end}"
 }
 
-LOCAL_URL=http://localhost:8080
+LOCAL_URL=$1
 ERROR=0 # Failed tests counter
 SUCCESS=0 # Success tests counter
 
@@ -98,7 +98,7 @@ function curlAndTestGet() {
         echo -e "\n"
         ((++SUCCESS))
     else
-        # Code other thsn 200, test feiled
+        # Code other than 200, test feiled
         error "/metrics paths is NOT returning the code 200 as expected, is returning $HTTP_STATUS"
         ((++ERROR))
     fi

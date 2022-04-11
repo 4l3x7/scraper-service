@@ -9,4 +9,3 @@ resources:
 - pvc.yaml
 - service.yaml
 - serviceaccount.yaml
-- ingress-rule.yaml

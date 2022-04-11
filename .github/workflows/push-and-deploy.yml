@@ -57,10 +57,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: E2E testing
-      #   run: |
-      #     pushd tests > /dev/null 2>&1 \
-      #     && ./curl.sh \
-      #     && popd > /dev/null 2>&1
+      - name: E2E testing
+        run: |
+          pushd tests > /dev/null 2>&1 \
+          && ./curl.sh http://${{ secrets.PUBLIC_IP }}\
+          && popd > /dev/null 2>&1
            
   
