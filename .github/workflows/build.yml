@@ -55,7 +55,7 @@ jobs:
 
       - name: Unit testing
         run: |
-          curl http://localhost:8080/metrics && sh ./tests/curl.sh
+          sh tests/curl.sh
            
   #   # Add additional steps here like scanning of image
 
