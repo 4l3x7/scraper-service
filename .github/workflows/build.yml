@@ -55,7 +55,9 @@ jobs:
 
       - name: Unit testing
         run: |
-          sh tests/curl.sh
+          pushd tests > /dev/null 2>&1 \
+          && ./curl.sh \
+          && popd > /dev/null 2>&1
            
   #   # Add additional steps here like scanning of image
 
