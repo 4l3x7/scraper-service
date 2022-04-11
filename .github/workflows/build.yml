@@ -51,11 +51,11 @@ jobs:
 
       - name: Run Docker image
         run: |
-          docker run -d -p 8080:8080 -p 8095:8080 --rm ${{ env.TEST_TAG }}
+          docker run -d -p 8080:8080 -p 8095:8080 ${{ env.TEST_TAG }}
 
       - name: Unit testing
         run: |
-          sh ./tests/curl.sh
+          curl http://localhost:8080/metrics && sh ./tests/curl.sh
            
   #   # Add additional steps here like scanning of image
 
