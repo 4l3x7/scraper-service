@@ -9,9 +9,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@bitbucket.org:pucksolutions/scheduling-engine.git
+    repoURL: git@github.com:4l3x7/scraper-service.git
     targetRevision: develop
-    path: kubernetes/integration-staging/monitoring          
+    path: infrastructure/monitoring          
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:

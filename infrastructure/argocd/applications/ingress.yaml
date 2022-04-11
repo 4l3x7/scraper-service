@@ -10,8 +10,8 @@ spec:
   project: default
   source:
     repoURL: git@bitbucket.org:pucksolutions/scheduling-engine.git
-    targetRevision: develop
-    path: kubernetes/integration-staging/ingress          
+    targetRevision: main
+    path: infrastructure/ingress 
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:

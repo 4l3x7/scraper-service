@@ -11,8 +11,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@bitbucket.org:pucksolutions/scheduling-engine.git
-    path: kubernetes/integration-staging/argocd/applications          
+    repoURL: git@github.com:4l3x7/scraper-service.git
+    path: infrastructure/argocd/applications          
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
