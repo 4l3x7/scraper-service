@@ -1,18 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress
-  labels:
-    env: common
+  name: ingress-nginx
+  namespace: argocd
   finalizers:
-  - resources-finalizer.argocd.argoproj.io  
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: git@bitbucket.org:pucksolutions/scheduling-engine.git
-    targetRevision: main
-    path: infrastructure/ingress 
   destination:
-    server: https://kubernetes.default.svc
+    namespace: ingress-nginx
+    server: 'https://kubernetes.default.svc'
+  source:
+    repoURL: 'https://kubernetes.github.io/ingress-nginx'
+    targetRevision: '3.23.0'
+    chart: ingress-nginx
   syncPolicy:
-    automated: {}
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - CreateNamespace=true

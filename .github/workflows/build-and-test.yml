@@ -38,7 +38,7 @@ jobs:
       - name: Unit testing
         run: |
           pushd tests > /dev/null 2>&1 \
-          && ./curl.sh \
+          && ./curl.sh http://localhost:8080 \
           && popd > /dev/null 2>&1
            
   #   # Add additional steps here like scanning of image

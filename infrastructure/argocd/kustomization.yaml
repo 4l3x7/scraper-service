@@ -9,8 +9,3 @@ resources:
 
 patchesStrategicMerge:
 - repository.yaml
-
-patches:
-  - path: applications/common-branch-patch.yaml
-    target:
-      kind: Application
