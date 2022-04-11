@@ -1,6 +1,6 @@
 
 # build.yml
-name: Build and test image
+name: Lint and Test
 
 on:
   pull_request:
@@ -8,23 +8,12 @@ on:
     branches:         
       - 'main' #only for the develop branch
 
-# env:
-#   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-#   AWS_DEFAULT_OUTPUT: json
-#   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-#   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#   EKS_CLUSTER_NAME: ${{ secrets.EKS_CLUSTER_NAME }}
-#   CONTAINER_IMAGE_API_GW: api-gw:${{ github.sha }}
-#   CONTAINER_IMAGE_CUSTOMER_SERVICE: customer-service:${{ github.sha }}
-#   CONTAINER_IMAGE_ORDER_SERVICE: order-service:${{ github.sha }}
-
 env:
   TEST_TAG: usagre90/scraper-service:test
 
 jobs:
   lint-and-build:
-    name: Build, test and push
+    name: Lint and Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
