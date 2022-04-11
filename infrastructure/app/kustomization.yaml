@@ -7,3 +7,8 @@ resources:
 - scraper-service-deployment.yaml
 - scraper-service-svc.yaml
 - ingress.yaml
+
+images:
+- name: usagre90/scraper-service
+  newName: usagre90/scraper-service
+  newTag: latest

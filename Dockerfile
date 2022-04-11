@@ -20,7 +20,6 @@ WORKDIR /var/www
 COPY scraper-service /var/www/
 
 # Run webServer
-#CMD php -S 0.0.0.0:8080 -t public
 CMD ["php", "-S" , "0.0.0.0:8080", "-t", "public"]
 
 # 8080 and 9095 (Here only for informative purpouses)

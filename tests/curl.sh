@@ -94,7 +94,8 @@ function curlAndTestGet() {
         # Code 200 received, test passed
         echo "/metrics paths is returning the code $HTTP_STATUS as expected "
         echo "Result of the metrics endpoint"
-        echo -ne "$HTTP_BODY"
+        echo "$HTTP_BODY"
+        echo -e "\n"
         ((++SUCCESS))
     else
         # Code other thsn 200, test feiled
