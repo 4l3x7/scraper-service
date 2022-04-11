@@ -7,6 +7,7 @@ RUN apk add \
     autoconf \
     gcc \
     build-base \
+    --no-cache \
     && pecl install apcu \
     && docker-php-ext-enable apcu
 
@@ -16,10 +17,11 @@ RUN echo "apc.enable_cli = On" > /usr/local/etc/php/conf.d/docker-php-ext-apcu-c
 WORKDIR /var/www
 
 # Copy REST API Code and dependencies already compiled
-COPY php-app /var/www/
+COPY scraper-service /var/www/
 
 # Run webServer
-CMD php -S 0.0.0.0:8080 -t public
+#CMD php -S 0.0.0.0:8080 -t public
+CMD ["php", "-S" , "0.0.0.0:8080", "-t", "public"]
 
 # 8080 and 9095 (Here only for informative purpouses)
 EXPOSE 8080
