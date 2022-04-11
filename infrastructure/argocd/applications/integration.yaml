@@ -1,0 +1,18 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: integration
+  labels:
+    env: integration
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io  
+spec:
+  project: default
+  source:
+    repoURL: git@bitbucket.org:pucksolutions/scheduling-engine.git
+    targetRevision: develop
+    path: kubernetes/integration-staging/integration-patches          
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy: {}

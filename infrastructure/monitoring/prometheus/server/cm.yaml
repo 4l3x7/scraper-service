@@ -1,0 +1,278 @@
+---
+# Source: prometheus/templates/server/cm.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    component: "server"
+    app: prometheus
+    release: prometheus
+    chart: prometheus-15.1.1
+    heritage: Helm
+  name: prometheus-server
+  namespace: monitoring
+data:
+  alerting_rules.yml: |
+    groups:
+    - name: ArgoCD                                              
+      rules:
+      - alert: ArgoAppOutOfSync                               
+        expr: argocd_app_info{sync_status="OutOfSync",name!="staging"} == 1   
+        for: 10m                                               
+        labels:                                               
+          severity: warning
+          
+          alerttag: ArgoAppOutOfSync
+        annotations:                                         
+          summary: "'{{ $labels.name }}' Application has sync status as '{{ $labels.sync_status }}'"
+          description: "'{{ $labels.name }}' Application has sync status as '{{ $labels.sync_status }}'"
+      - alert: ArgoAppSyncFailed                              
+        expr: argocd_app_sync_total{phase!="Succeeded",name!="staging"} == 1  
+        for: 10m                                               
+        labels:                                              
+          severity: warning
+          
+          alerttag: ArgoAppOutOfSync
+        annotations:                                          
+          summary: "'{{ $labels.name }}' Application has sync phase as '{{ $labels.phase }}'"
+          description: "'{{ $labels.name }}' Application has sync phase as '{{ $labels.phase }}'"
+      - alert: ArgoAppMissing                                 
+        expr: absent(argocd_app_info)                         
+        for: 15m
+        labels:                                               
+          severity: critical
+          
+          alerttag: ArgoAppOutOfSync
+        annotations:                                          
+          summary: "[ArgoCD] No reported applications"
+          description: >
+            ArgoCD has not reported any applications data for the past 15 minutes which
+            means that it must be down or not functioning properly.
+    - name: Prometheus
+      rules:
+      - alert: PrometheusAllTargetsMissing
+        expr: count by (job) (up) == 0
+        for: 5m
+        labels:
+          severity: critical
+          alerttag: PrometheusAllTargetsMissing
+        annotations:
+          summary: Prometheus all targets missing (instance {{ $labels.instance }})
+          description: "A Prometheus job does not have living target anymore.\n\n"
+      - alert: PrometheusTargetMissing
+        annotations:
+          description: |-
+            A Prometheus target has disappeared. An exporter might be crashed.
+          summary: Prometheus target missing (instance {{ $labels.instance
+            }})
+        expr: up == 0
+        for: 4m
+        labels:
+          severity: error
+          
+          alerttag: PrometheusTargetMissing
+    - name: Nginx
+      rules:
+      - alert: NginxHighHttp4xxErrorRate
+        annotations:
+          description: |-
+            Too many HTTP requests with status 4xx (> 5%)
+          summary: Nginx Ingress high HTTP 4xx error rate (instance {{ $labels.instance
+            }})
+        expr: sum(rate(nginx_ingress_controller_requests{status=~"[4].*"}[1m])) / sum(rate(nginx_http_requests_total[1m]))
+          * 100 > 5
+        for: 1m
+        labels:
+          severity: error
+          
+          alerttag: NginxHighHttp4xxErrorRate
+      - alert: NginxHighHttp5xxErrorRate
+        annotations:
+          description: |-
+            Too many HTTP requests with status 5xx (> 5%)
+          summary: Nginx Ingress high HTTP 5xx error rate (instance {{ $labels.instance
+            }})
+        expr: sum(rate(nginx_ingress_controller_requests{status=~"[5].*"}[1m])) / sum(rate(nginx_http_requests_total[1m]))
+          * 100 > 5
+        for: 1m
+        labels:
+          severity: error
+          
+          alerttag: NginxHighHttp5xxErrorRate
+      - alert: NginxLatencyHigh
+        annotations:
+          description: |-
+            Nginx p99 latency is higher than 3 seconds
+          summary: Nginx latency high (instance {{ $labels.instance }})
+        expr: histogram_quantile(0.99, sum(rate(nginx_http_request_duration_seconds_bucket[2m]))
+          by (host, node)) > 3
+        for: 2m
+        labels:
+          severity: warning
+          
+          alerttag: NginxLatencyHigh
+    - name: Pods
+      rules:
+      - alert: KubernetesPodCPUUsageMoreThan80PerCent
+        annotations:
+          description: |-
+            "pod {{$labels.pod}} is using high cpu"
+          summary: "HIGH CPU USAGE WARNING for POD {{$labels.pod}} on{{$labels.host}}"
+        expr: (sum(rate(container_cpu_usage_seconds_total{pod!=""}[5m]))by(pod)*100)>80
+        for: 10m
+        labels:
+          severity: warning
+          
+          alerttag: KubernetesPodCPUUsageMoreThan80PerCent
+    - name: Kubernetes
+      rules:
+      - alert: KubernetesNodeNotReady
+        annotations:
+          description: |-
+            Node {{ $labels.node }} has been unready for a long time
+          summary: Kubernetes Node ready (instance {{ $labels.instance }})
+        expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+        for: 10m
+        labels:
+          severity: critical
+          
+          alerttag: KubernetesNodeNotReady
+
+      - alert: KubernetesMemoryPressure
+        annotations:
+          description: |-
+            {{ $labels.node }} has MemoryPressure condition
+          summary: Kubernetes memory pressure (instance {{ $labels.instance
+            }})
+        expr: kube_node_status_condition{condition="MemoryPressure",status="true"} ==
+          1
+        for: 2m
+        labels:
+          
+          alerttag: KubernetesMemoryPressure
+          severity: warning
+      - alert: KubernetesOutOfCapacity
+        annotations:
+          description: |-
+            {{ $labels.node }} is out of capacity
+          summary: Kubernetes out of capacity (instance {{ $labels.instance
+            }})
+        expr: sum by (node) ((kube_pod_status_phase{phase="Running"} == 1) + on(pod, namespace)
+          group_left(node) (0 * kube_pod_info)) / sum(kube_node_status_allocatable_pods)
+          by (node) * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+          
+          alerttag: KubernetesOutOfCapacity
+      - alert: KubernetesPersistentvolumeclaimPending
+        annotations:
+          description: |-
+            PersistentVolumeClaim {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is pending
+          summary: Kubernetes PersistentVolumeClaim pending (instance {{
+            $labels.instance }})
+        expr: kube_persistentvolumeclaim_status_phase{phase="Pending"} == 1
+        for: 2m
+        labels:
+          severity: warning
+          
+          alerttag: KubernetesPersistentvolumeclaimPending
+      - alert: KubernetesVolumeFullInFourDays
+        annotations:
+          description: |-
+            {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is expected to fill up within four days. Currently {{ $value | humanize }}% is available.
+          summary: Kubernetes Volume full in four days (instance {{ $labels.instance
+            }})
+        expr: predict_linear(kubelet_volume_stats_available_bytes[6h], 4 * 24 * 3600)
+          < 0
+        for: 0m
+        labels:
+          severity: warning
+          
+          alerttag: KubernetesVolumeFullInFourDays
+      - alert: KubernetesPersistentvolumeError
+        annotations:
+          description: |-
+            Persistent volume is in bad state
+          summary: Kubernetes PersistentVolume error (instance {{ $labels.instance
+            }})
+        expr: kube_persistentvolume_status_phase{phase=~"Failed|Pending", job="kube-state-metrics"}
+          > 0
+        for: 0m
+        labels:
+          severity: error
+          
+          alerttag: KubernetesPersistentvolumeError
+      - alert: KubernetesJobFailed
+        expr: kube_job_status_failed > 0
+        for: 0m
+        labels:
+          severity: warning
+          alerttag: KubernetesJobFailed
+          
+        annotations:
+          summary: Kubernetes Job failed (instance {{ $labels.instance }})
+          description: "Job {{$labels.namespace}}/{{$labels.exported_job}} failed to complete\n"
+      - alert: KubernetesPodNotHealthy
+        expr: min_over_time(sum by (namespace, pod) (kube_pod_status_phase{phase=~"Pending|Unknown|Failed"})[15m:1m]) > 0
+        for: 30m
+        labels:
+          severity: error
+          alerttag: KubernetesPodNotHealthy
+          
+        annotations:
+          summary: Kubernetes Pod not healthy (instance {{ $labels.instance }})
+          description: "Pod has been in a non-ready state for longer than 15 minutes.\n  VALUE = {{ $value }}\n"
+      - alert: KubernetesPodCrashLooping
+        expr: increase(kube_pod_container_status_restarts_total[1m]) > 3
+        for: 2m
+        labels:
+          severity: error
+          alerttag: KubernetesPodCrashLooping
+          
+        annotations:
+          summary: Kubernetes pod crash looping (instance {{ $labels.instance }})
+          description: "Pod {{ $labels.pod }} is crash looping\n  VALUE = {{ $value }}\n"
+    
+  alerts: |
+    {}
+  prometheus.yml: |
+    # my global config
+    global:
+      scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+      evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+      # scrape_timeout is set to the global default (10s).
+
+    # Alertmanager configuration
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets:
+              # - alertmanager:9093
+
+    # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+    rule_files:
+      # - "first_rules.yml"
+      # - "second_rules.yml"
+
+    # A scrape configuration containing exactly one endpoint to scrape:
+    # Here it's Prometheus itself.
+    scrape_configs:
+      # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+      - job_name: "prometheus"
+
+        # metrics_path defaults to '/metrics'
+        # scheme defaults to 'http'.
+
+        static_configs:
+          - targets: ["localhost:9090"]
+
+      - job_name: scraper-service
+        metrics_path: /metrics
+        static_configs:
+        - targets: ['scraper-service.scraper-service.svc.cluster.local:9095']
+
+  recording_rules.yml: |
+    {}
+  rules: |
+    {}
