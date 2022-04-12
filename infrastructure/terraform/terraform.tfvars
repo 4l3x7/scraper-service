@@ -1,10 +1,10 @@
-project_name = "scraper-service" 
-project_id = "scraper-service-346615" 
-region = "europe-west1"
-location = "europe-west1-b"
+# project_name = "" 
+# project_id = "" 
+# region = "europe-west1"
+# location = "europe-west1-b"
 node_count = 1
 machine_type = "e2-standard-2"
-billing_account = "01A41E-3B0A4A-A76B5F"
+# billing_account = ""
 labels = {
   "environment" = "development"
   "requester" = "phaidra"
