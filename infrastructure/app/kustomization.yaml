@@ -11,4 +11,4 @@ resources:
 images:
 - name: usagre90/scraper-service
   newName: usagre90/scraper-service
-  newTag: 9eb35087fce64309aade5b523b94d5af4c24e0f3
+  newTag: 937031bd9a6bd7d59425b2d5a2ecd46b29ee4196
