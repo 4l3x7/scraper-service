@@ -2,8 +2,28 @@
 
 ## AL - Scraper Service
 
-[![Push, Deploy and Test](https://github.com/4l3x7/scraper-service/actions/workflows/push-and-deploy.yml/badge.svg)](https://github.com/4l3x7/scraper-service/actions/workflows/build.yml)
-[
+[![Push, test and deploy image](https://github.com/4l3x7/scraper-service/actions/workflows/push-and-deploy.yml/badge.svg?branch=main)](https://github.com/4l3x7/scraper-service/actions/workflows/push-and-deploy.yml)
+
+- [AL - Scraper Service](#al---scraper-service)
+  - [Description](#description)
+    - [Requirements](#requirements)
+    - [Good to have](#good-to-have)
+  - [Tools selected](#tools-selected)
+    - [For the application](#for-the-application)
+    - [For infrastructure and deployment](#for-infrastructure-and-deployment)
+  - [The webservice](#the-webservice)
+    - [Ping Endpoint (/ping)](#ping-endpoint-ping)
+    - [Root endpoint (/)](#root-endpoint-)
+    - [Metrics endpoint (/metrics)](#metrics-endpoint-metrics)
+  - [Testing](#testing)
+    - [Improvement](#improvement)
+  - [Kubernetes deployment](#kubernetes-deployment)
+    - [IaC with Terraform](#iac-with-terraform)
+    - [Manifests with GitOps approach with ArgoCD](#manifests-with-gitops-approach-with-argocd)
+  - [CI/CD](#cicd)
+  - [Monitoring (Prometheus and Grafana)](#monitoring-prometheus-and-grafana)
+    - [PromQL queries to get scraper-service metrics](#promql-queries-to-get-scraper-service-metrics)
+  - [Production deployment](#production-deployment)
 
 ### Description
 
@@ -203,6 +223,10 @@ Output of the script
 
 The same script is used in the **unit testing** in the pipeline and the **E2E test** in the 'production' environment.
 
+#### Improvement
+
+Create a batch job which call the script regularly.
+
 ### Kubernetes deployment
 
 #### IaC with Terraform
@@ -253,6 +277,11 @@ The meta-argocd-app will create the other apps
 	- Pushing the image the dockerhub repository
 	- Editing the kustomize files with the last version of the docker image (tagged as the commit hash)
 	- Commit and push of the kustomize changed files that will be grabbed by ArgoCD
+
+Check some examples of the running workflows here:
+
+- [build-and-test](https://github.com/4l3x7/scraper-service/runs/5986275217?check_suite_focus=true)
+- [push-and-deploy.yaml](https://github.com/4l3x7/scraper-service/runs/5971823403?check_suite_focus=true)
 
 ### Monitoring (Prometheus and Grafana)
 
