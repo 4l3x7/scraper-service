@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Docker image
         run: |
-          docker run -d -p 8080:8080 -p 8095:8080 ${{ env.TEST_TAG }}
+          docker run -d -p 8080:8080 -p 9095:8080 ${{ env.TEST_TAG }}
 
       - name: Unit testing
         run: |

@@ -57,6 +57,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Wait 90 seconds
+        run: |
+          sleep 90
+
       - name: E2E testing
         run: |
           pushd tests > /dev/null 2>&1 \
