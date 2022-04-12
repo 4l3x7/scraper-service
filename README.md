@@ -2,8 +2,6 @@
 
 ## AL - Scraper Service
 
-[![Push, test and deploy image](https://github.com/4l3x7/scraper-service/actions/workflows/push-and-deploy.yml/badge.svg?branch=main)](https://github.com/4l3x7/scraper-service/actions/workflows/push-and-deploy.yml)
-
 - [AL - Scraper Service](#al---scraper-service)
   - [Description](#description)
     - [Requirements](#requirements)
@@ -256,7 +254,7 @@ The kubernetes manifests can be found int the /infrastructure directory and are 
 	 - monitoring app > Grafana and Prometheus
 	 - scraper-service app > scraper-service app
 
-![See ArgoCD applications running](https://github.com/4l3x7/scraper-service/images/argocd.png)
+![See ArgoCD applications running](https://github.com/4l3x7/scraper-service/raw/main/images/argocd.png)
 
 ArgoCD grabes the manifests files from the main branch of the repository. To deploy the solution by yourself go to infrastructure/argocd directory, add your key to `secret.yaml` file and apply the contents of the directory.
 
@@ -298,7 +296,7 @@ A basic PromQL query to see the evolution of the counter by the HTTP code obtain
 
 Which will plot something like that
 
-![Plot for sum(http_gets{}) by (code)](https://github.com/4l3x7/scraper-service/images/simpleplot.png)
+![Plot for sum(http_gets{}) by (code)](https://github.com/4l3x7/scraper-service/raw/main/images/simpleplot.png)
 
 We can also graph average number of gets per time interval per HTTP code received. In this case we can get the gets per hour, averaged for the last 5 minutes if each point.
 
@@ -306,13 +304,13 @@ We can also graph average number of gets per time interval per HTTP code receive
 
 Which results in:
 
-![Plot for sum(rate(http_gets[5m]) * 60) by (code)](https://github.com/4l3x7/scraper-service/images/rateplot.png)
+![Plot for sum(rate(http_gets[5m]) * 60) by (code)](https://github.com/4l3x7/scraper-service/raw/main/images/rateplot.png)
 
 With Grafana, we can also show a pie chart. With this we can see easily the increase in the counter in an interval of time. In this image, for the last 6 hours.
 
     sum(increase(http_gets{}[$__range])) by (code)
 
-![enter image description here](https://github.com/4l3x7/scraper-service/images/piechart.png)
+![enter image description here](https://github.com/4l3x7/scraper-service/raw/main/images/piechart.png)
 
 ### Production deployment 
 
@@ -321,3 +319,5 @@ Once you have deployed the kubernetes cluster as explained in the 'kubernetes de
     terraform output -raw kubernetes_cluster_host
 
 To make the E2E test work in GitHub actions, add it as a repository secret with the name "PUBLIC_IP".
+
+    
