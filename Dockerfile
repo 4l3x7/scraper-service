@@ -26,4 +26,4 @@ CMD ["php", "-S" , "0.0.0.0:8080", "-t", "public"]
 EXPOSE 8080
 EXPOSE 9095
 
-# Run it for testing purpouses with docker run -d -p 8080:8080 -p 8095:8080 usagre90/scraper-service
+# Run it for testing purpouses with docker run -d -p 8080:8080 -p 9095:8080 usagre90/scraper-service

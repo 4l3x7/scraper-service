@@ -1,0 +1,4 @@
+# ignore temporary files in the docker image bulding
+*/temp*
+*/*/temp*
+temp?

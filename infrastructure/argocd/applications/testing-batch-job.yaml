@@ -1,0 +1,19 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cleaning-job
+  labels:
+    env: common
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io  
+spec:
+  project: default
+  source:
+    repoURL: git@bitbucket.org:pucksolutions/scheduling-engine.git
+    targetRevision: develop
+    path: kubernetes/integration-staging/cleaning-job      
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated: {}

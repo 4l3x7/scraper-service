@@ -94,16 +94,33 @@ function curlAndTestGet() {
         # Code 200 received, test passed
         echo "/metrics paths is returning the code $HTTP_STATUS as expected "
         echo "Result of the metrics endpoint"
-        echo "$HTTP_BODY"
-        echo -e "\n"
+        echo "$HTTP_BODY \n"
         ((++SUCCESS))
     else
         # Code other than 200, test feiled
         error "/metrics paths is NOT returning the code 200 as expected, is returning $HTTP_STATUS"
         ((++ERROR))
     fi
-
 }
+
+# Testing the ping endpoint
+info "Testing the ping endpoint for health check"
+C_RESPONSE=$(curl --request GET ${LOCAL_URL}/ping --silent --write-out "HTTPSTATUS:%{http_code}")
+
+#Parse the response
+HTTP_BODY=$(echo $C_RESPONSE | sed -E 's/HTTPSTATUS\:[0-9]{3}$//')
+HTTP_STATUS=$(echo $C_RESPONSE | tr -d '\n' | sed -E 's/.*HTTPSTATUS:([0-9]{3})$/\1/')
+
+if [[ $HTTP_STATUS == 200 ]]; then
+    # Code 200 received, test passed
+    echo "/ping paths is returning the code $HTTP_STATUS as expected "
+    ((++SUCCESS))
+else
+    # Code other than 200, test feiled
+    error "/ping paths is NOT returning the code 200 as expected, is returning $HTTP_STATUS"
+    ((++ERROR))
+    exit 1
+fi
 
 # Testing scraper service
 info "Testing scraper service"
@@ -138,9 +155,4 @@ else
     error "$SUCCESS tests passed"
     error "$ERROR tests failed"
     exit 1
-fi
-
-
-
-
-                                                                                          
+fi                                                          
