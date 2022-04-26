@@ -298,13 +298,13 @@ Which will plot something like that
 
 ![Plot for sum(http_gets{}) by (code)](https://github.com/4l3x7/scraper-service/raw/main/images/simpleplot.png)
 
-We can also graph average number of gets per time interval per HTTP code received. In this case we can get the gets per hour, averaged for the last 5 minutes if each point.
+We can also graph average number of gets per time interval per HTTP code received. In this case we can get the gets per second, averaged for the last 5 minutes of each point.
 
-    sum(rate(http_gets[5m]) * 60) by (code)
+    sum(rate(http_gets[5m])) by (code)
 
 Which results in:
 
-![Plot for sum(rate(http_gets[5m]) * 60) by (code)](https://github.com/4l3x7/scraper-service/raw/main/images/rateplot.png)
+![Plot for sum(rate(http_gets[5m])) by (code)](https://github.com/4l3x7/scraper-service/raw/main/images/rateplot.png)
 
 With Grafana, we can also show a pie chart. With this we can see easily the increase in the counter in an interval of time. In this image, for the last 6 hours.
 
